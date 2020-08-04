@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace EFCore
 {
@@ -33,6 +34,11 @@ namespace EFCore
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryService<>));
             services.AddScoped<IStudentRepository, StudentRepositoryService>();
             services.AddScoped<ApplicationContext>();
+            /* Register the Swagger generator, defining 1 or more Swagger documents*/
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
             services.AddControllers()
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
@@ -50,6 +56,13 @@ namespace EFCore
             app.UseRouting();
 
             app.UseAuthorization();
+            /* Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+             specifying the Swagger JSON endpoint.*/
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

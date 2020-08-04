@@ -49,7 +49,7 @@ namespace EFCore.Controllers
         {
             return _studentRepository.Update(student);
         }
-        [HttpPost("RemoveStudent")]
+        [HttpDelete("RemoveStudent")]
         public string RemoveStudent([FromBody] Student student)
         {
             return _studentRepository.Delete(student);
